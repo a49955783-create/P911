@@ -14,12 +14,10 @@ const dropArea      = document.getElementById('dropArea');
 const imgInput      = document.getElementById('imgInput');
 
 const rowsEl        = document.getElementById('rows');
-const leaderName = document.getElementById('leaderName');
 const leaderCode = document.getElementById('leaderCode');
 const addLeader = document.getElementById('addLeader');
 const leadersList = document.getElementById('leadersList');
 
-const officerName = document.getElementById('officerName');
 const officerCode = document.getElementById('officerCode');
 const addOfficer = document.getElementById('addOfficer');
 const officersList = document.getElementById('officersList');
@@ -31,27 +29,27 @@ const corporalCode = document.getElementById('corporalCode');
 const addCorporal = document.getElementById('addCorporal');
 const corporalsList = document.getElementById('corporalsList');
 
-const sharedUnitCode = document.getElementById('sharedUnitCode');
-const addShared = document.getElementById('addShared');
+const unitRowsEl = document.getElementById('unitRows');
+const unitCode = document.getElementById('unitCode');
+const unitLoc = document.getElementById('unitLoc');
+const unitState = document.getElementById('unitState');
+const unitSpeedType = document.getElementById('unitSpeedType');
+const addUnit = document.getElementById('addUnit');
+const addPartner = document.getElementById('addPartner');
 const sharedList = document.getElementById('sharedList');
-
-const tankUnitCode = document.getElementById('tankUnitCode');
-const addTank = document.getElementById('addTank');
 const tankList = document.getElementById('tankList');
-
-const speedUnitType = document.getElementById('speedUnitType');
-const speedUnitCode = document.getElementById('speedUnitCode');
-const addSpeed = document.getElementById('addSpeed');
 const speedList = document.getElementById('speedList');
 
-// data holders
+const startTimeBtn = document.getElementById('startTimeBtn');
+const endTimeBtn = document.getElementById('endTimeBtn');
+
 let leaders = [];
 let officers = [];
-let shiftManager = {name:'', code:''};
 let corporals = [];
-let sharedUnits = [];
-let tankUnits = [];
-let speedUnits = [];
+let shiftManager = {name:'', code:''};
+let units = [];
+let startTime = '';
+let endTime = '';
 
 const addRowBtn     = document.getElementById('addRowBtn');
 
@@ -109,58 +107,65 @@ function checkNames() {
 }
 
 /* ========== توليد النتيجة ========== */
+
 function buildResult() {
-  if (!checkNames()) return;
+  const lines = [];
 
-  const inField = [];
-  const offField= [];
+  lines.push(':pushpin: استلام العمليات :pushpin:');
+  lines.push(`اسم العمليات : ${receiverName.value.trim() || ''} ${receiverCode.value.trim() ? '|'+' '+receiverCode.value.trim() : ''}`);
+  lines.push(`النائب مركز العمليات : ${deputyName.value.trim() || ''} ${deputyCode.value.trim() ? '|'+' '+deputyCode.value.trim() : ''}`);
+  lines.push('');
+  lines.push('القيادات ');
+  lines.push(leaders.length ? leaders.join(' - ') : '-');
+  lines.push('');
+  lines.push('الضباط : ');
+  lines.push(officers.length ? officers.join(' - ') : '-');
+  lines.push('');
+  lines.push('مسؤل فترة : ');
+  lines.push(shiftManager.name ? (shiftManager.name + ' ' + shiftManager.code) : '-');
+  lines.push('');
+  lines.push('ضباط الصف');
+  lines.push(corporals.length ? corporals.join(' - ') : '-');
+  lines.push('');
+  lines.push('توزيع الوحدات');
+  const shared = units.filter(u=>u.type==='shared');
+  if(shared.length){
+    shared.forEach(u=>{
+      const partners = u.partners && u.partners.length ? ' + ' + u.partners.join(' + ') : '';
+      lines.push(`${u.code}${partners}${u.loc ? ' | ' + u.loc : ''}`);
+    });
+  } else {
+    lines.push('-');
+  }
+  lines.push('');
+  lines.push('وحدات سبيد يونت');
+  const speed = units.filter(u=>u.type==='speed');
+  if(speed.length){
+    speed.forEach(u=> lines.push(`${u.code} | ${u.speedType}`));
+  } else { lines.push('-'); }
+  lines.push('');
+  lines.push('وحدات دباب');
+  const tank = units.filter(u=>u.type==='tank');
+  if(tank.length){
+    tank.forEach(u=> lines.push(u.code));
+  } else { lines.push('-'); }
+  lines.push('');
+  lines.push('وحدات مشتركة');
+  if(shared.length){
+    shared.forEach(u=>{
+      const partners = u.partners && u.partners.length ? ' + ' + u.partners.join(' + ') : '';
+      lines.push(`${u.code}${partners}${u.loc ? ' | ' + u.loc : ''}`);
+    });
+  } else { lines.push('-'); }
 
-  rows.forEach(r => {
-    const locTxt = r.loc && r.loc !== '— لا شيء —' ? ` - ( ${r.loc} )` : '';
+  lines.push('');
+  if(startTime) lines.push('وقت الاستلام ' + startTime);
+  if(endTime) lines.push('وقت التسليم : ' + endTime);
+  lines.push('تم التسليم إلى : ');
 
-    if (r.state === 'خارج الخدمة'){
-      offField.push(`${r.name} | ${r.code}`);
-    } else {
-      let statePart = '';
-      if (r.state !== 'في الميدان') statePart = ` ( ${r.state} )`;
-      inField.push(`${r.name} | ${r.code}${statePart}${locTxt}`);
-    }
-  });
-
-  const count = rows.length;
-  const recLine = `المستلم : ${receiverName.value.trim()} | ${receiverCode.value.trim()}`;
-  const depLine = `النائب : ${deputyName.value.trim()} | ${deputyCode.value.trim()}`;
-
-  const out = [
-    '📌 استلام العمليات 📌',
-    '',
-    recLine,
-    '',
-    depLine,
-    '',
-    `القيادات : ${leaders.map(l=>`${l.name} | ${l.code}`).join(' , ') || '-'} ` + '\n' +
-    `الضباط : ${officers.map(o=>`${o.name} | ${o.code}`).join(' , ') || '-'} ` + '\n' +
-    `مسؤل فترة : ${shiftManager.name ? shiftManager.name + ' | ' + shiftManager.code : '-'} ` + '\n' +
-    `ضباط صف : ${corporals.join(' , ') || '-'} ` + '\n' +
-    `توزيع الوحدات :` + '\n' +
-    `وحدات مشتركة : ${sharedUnits.join(' + ') || '-'} ` + '\n' +
-    `وحدات دباب : ${tankUnits.join(' , ') || '-'} ` + '\n' +
-    `وحدات سبيد يونت : ${speedUnits.map(s=>`${s.code} (${s.type})`).join(' , ') || '-'} ` + '\n' +
-    `عدد و اسماء الوحدات الاسعافيه في الميدان :{${count}}`,
-    ...(inField.length ? inField : ['—']),
-    '',
-    `خارج الخدمة : (${offField.length})`,
-    ...(offField.length ? offField : ['—']),
-    '',
-    '🎙️ تم استلام العمليات و جاهزون للتعامل مع البلاغات',
-    '',
-    'الملاحظات : تحديث'
-  ].join('\n');
-
-  resultBox.value = out;
+  resultBox.value = lines.join('\n');
 }
 
-/* ========== رسم صف ========== */
 function renderRows(){
   rowsEl.innerHTML = '';
   rows.forEach((r, i) => {
@@ -326,71 +331,6 @@ async function runOCR(file){
   }
 }
 
-
-/* ======= Handlers for added fields ======= */
-addLeader.addEventListener('click', ()=>{
-  const n = leaderName.value.trim(), c = leaderCode.value.trim();
-  if(!n || !c) { alert('اكتب الاسم والكود للقيادة'); return; }
-  leaders.push({name:n, code:c});
-  leaderName.value=''; leaderCode.value='';
-  renderLists(); buildResult();
-});
-
-addOfficer.addEventListener('click', ()=>{
-  const n = officerName.value.trim(), c = officerCode.value.trim();
-  if(!n || !c) { alert('اكتب الاسم والكود للضابط'); return; }
-  officers.push({name:n, code:c});
-  officerName.value=''; officerCode.value='';
-  renderLists(); buildResult();
-});
-
-addCorporal.addEventListener('click', ()=>{
-  const c = corporalCode.value.trim();
-  if(!c){ alert('اكتب كود ضابط الصف'); return; }
-  corporals.push(c);
-  corporalCode.value='';
-  renderLists(); buildResult();
-});
-
-addShared.addEventListener('click', ()=>{
-  const c = sharedUnitCode.value.trim();
-  if(!c){ alert('اكتب كود الوحدة المشتركة'); return; }
-  sharedUnits.push(c);
-  sharedUnitCode.value='';
-  renderLists(); buildResult();
-});
-
-addTank.addEventListener('click', ()=>{
-  const c = tankUnitCode.value.trim();
-  if(!c){ alert('اكتب كود وحدة الدباب'); return; }
-  tankUnits.push(c);
-  tankUnitCode.value='';
-  renderLists(); buildResult();
-});
-
-addSpeed.addEventListener('click', ()=>{
-  const t = speedUnitType.value, c = speedUnitCode.value.trim();
-  if(!t || !c){ alert('اختر النوع واكتب الكود'); return; }
-  speedUnits.push({type:t, code:c});
-  speedUnitType.value=''; speedUnitCode.value='';
-  renderLists(); buildResult();
-});
-
-function renderLists(){
-  leadersList.innerHTML = leaders.map(l=>`${l.name} | ${l.code}`).join(' — ') || '(لا يوجد)';
-  officersList.innerHTML = officers.map(o=>`${o.name} | ${o.code}`).join(' — ') || '(لا يوجد)';
-  corporalsList.innerHTML = corporals.join(' — ') || '(لا يوجد)';
-  sharedList.innerHTML = sharedUnits.join(' — ') || '(لا يوجد)';
-  tankList.innerHTML = tankUnits.join(' — ') || '(لا يوجد)';
-  speedList.innerHTML = speedUnits.map(s=>`${s.code} (${s.type})`).join(' — ') || '(لا يوجد)';
-}
-
-// update shift manager fields into data holder on input
-[shiftName, shiftCode].forEach(el=> el.addEventListener('input', ()=>{
-  shiftManager.name = shiftName.value.trim();
-  shiftManager.code = shiftCode.value.trim();
-  buildResult();
-}));
 /* تنظيف سطر */
 function cleanLine(s){
   s = s.replace(/[\u200E\u200F\u202A-\u202E]/g,''); // علامات اتجاه
@@ -460,3 +400,83 @@ function preprocessImage(file){
 /* تحديث النتيجة عند تغيّر حقول الأسماء */
 [receiverName,receiverCode,deputyName,deputyCode]
   .forEach(el=> el.addEventListener('input', buildResult));
+
+
+/* Handlers for codes and units */
+addLeader.addEventListener('click', ()=>{
+  const c = leaderCode.value.trim();
+  if(!c){ alert('اكتب كود القيادة'); return; }
+  leaders.push(c);
+  leaderCode.value=''; renderLists(); buildResult();
+});
+addOfficer.addEventListener('click', ()=>{
+  const c = officerCode.value.trim();
+  if(!c){ alert('اكتب كود الضابط'); return; }
+  officers.push(c);
+  officerCode.value=''; renderLists(); buildResult();
+});
+addCorporal.addEventListener('click', ()=>{
+  const c = corporalCode.value.trim();
+  if(!c){ alert('اكتب كود ضابط الصف'); return; }
+  corporals.push(c);
+  corporalCode.value=''; renderLists(); buildResult();
+});
+
+function renderLists(){
+  leadersList.innerHTML = leaders.join(' - ') || '(لا يوجد)';
+  officersList.innerHTML = officers.join(' - ') || '(لا يوجد)';
+  corporalsList.innerHTML = corporals.join(' - ') || '(لا يوجد)';
+  sharedList.innerHTML = units.filter(u=>u.type==='shared').map(u=>u.partners && u.partners.length? (u.code + ' + ' + u.partners.join(' + ') + ' | ' + (u.loc||'-')) : (u.code + ' | ' + (u.loc||'-'))).join('<br>') || '(لا يوجد)';
+  tankList.innerHTML = units.filter(u=>u.type==='tank').map(u=>u.code).join('<br>') || '(لا يوجد)';
+  speedList.innerHTML = units.filter(u=>u.type==='speed').map(u=>u.code + ' | ' + u.speedType).join('<br>') || '(لا يوجد)';
+  unitRowsEl.innerHTML = '';
+  units.forEach((u, idx)=>{
+    const div = document.createElement('div');
+    div.className = 'unit-row';
+    div.innerHTML = `<div>${u.code}</div><div>${u.loc || '-'}</div><div>${u.state || '-'}</div><div>${u.speedType || '-'}</div><div><button class="btn small" data-idx="${idx}" data-act="del">حذف</button> <button class="btn small" data-idx="${idx}" data-act="partner">أضف شريك</button></div>`;
+    unitRowsEl.appendChild(div);
+  });
+  unitRowsEl.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const idx = parseInt(b.getAttribute('data-idx'));
+      const act = b.getAttribute('data-act');
+      if(act==='del'){ units.splice(idx,1); renderLists(); buildResult(); }
+      if(act==='partner'){ const p = prompt('أدخل كود الشريك لإضافته'); if(p){ units[idx].partners = units[idx].partners || []; units[idx].partners.push(p); renderLists(); buildResult(); } }
+    });
+  });
+}
+
+addUnit.addEventListener('click', ()=>{
+  const c = unitCode.value.trim();
+  if(!c){ alert('اكتب كود الوحدة'); return; }
+  const loc = unitLoc.value.trim();
+  const state = unitState.value;
+  const speedType = unitSpeedType.value;
+  let type = 'other';
+  if(speedType) type = 'speed';
+  else if(state && state.toLowerCase().includes('دباب')) type = 'tank';
+  else type = 'shared';
+  units.push({code:c, loc:loc, state:state, speedType:speedType, partners:[], type:type});
+  unitCode.value=''; unitLoc.value=''; unitState.value=''; unitSpeedType.value='';
+  renderLists(); buildResult();
+});
+
+addPartner.addEventListener('click', ()=>{
+  const p = prompt('أدخل كود الشريك لإضافته للعنصر الأخير');
+  if(!p) return;
+  if(units.length===0){ alert('لا يوجد عناصر لإضافة شريك لها'); return; }
+  units[units.length-1].partners = units[units.length-1].partners || []; units[units.length-1].partners.push(p);
+  renderLists(); buildResult();
+});
+
+startTimeBtn.addEventListener('click', ()=>{
+  if(startTime) { alert('وقت الاستلام مسجل سابقاً: '+startTime); return; }
+  startTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  alert('تم تسجيل وقت الاستلام: '+startTime);
+  buildResult();
+});
+endTimeBtn.addEventListener('click', ()=>{
+  endTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  alert('تم تسجيل وقت التسليم: '+endTime);
+  buildResult();
+});

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>تحديث مركز العمليات للشرطة</title>
+  <title>تحديث مركز العمليات للصحة</title>
 
   <!-- خط عربي جميل (اختياري) -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
       <span class="beacon red"></span>
     </div>
     <div class="intro-logo">
-      
+      <img src="logo-left.png" alt="EMS" />
     </div>
     <div class="intro-title"><b>EMS</b> مستشفى ريسبكت</div>
   </div>
@@ -33,9 +33,9 @@
 
   <!-- هيدر ثابت -->
   <header class="topbar">
-    
-    <h1>تحديث مركز العمليات للشرطة</h1>
-    
+    <img class="badge left" src="logo-left.png" alt="EMS" />
+    <h1>تحديث مركز العمليات للصحة</h1>
+    <img class="badge right" src="logo-right.png" alt="EMS" />
   </header>
 
   <!-- أكشنات علوية ثابتة تحت الهيدر -->
@@ -60,128 +60,107 @@
         <div class="title">النتيجة النهائية</div>
         <button id="copyBtn" class="btn slim">نسخ النتيجة</button>
       </div>
+      <div class="row two"><div><button id="startTimeBtn" class="btn">تسجيل وقت الاستلام</button></div><div><button id="endTimeBtn" class="btn">إنهاء العمليات</button></div></div>
       <textarea id="resultBox" class="result" rows="10" spellcheck="false"></textarea>
       <div class="hint small">المستلم يُحتسب ضمن العدد ولا يُعرض ضمن قائمة الميدان.</div>
     </section>
 
+    <!-- المستلم/النائب -->
     
-<!-- المستلم/النائب -->
+<!-- رأس النموذج: اسم مركز العمليات، النائب، القيادات، الضباط، مسؤول الفترة، ضباط صف -->
 <section class="card">
+  <h2 class="card-title">معلومات مركز العمليات</h2>
   <div class="row two">
     <div>
-      <div class="label">المستلم — <span class="muted">الاسم</span></div>
-      <input id="receiverName" class="input" placeholder="الاسم" />
-      <div class="label">— <span class="muted">الكود</span></div>
-      <input id="receiverCode" class="input" placeholder="الكود" />
-      <div id="receiverErr" class="err">يجب عليك كتابة الاسم مع كود</div>
+      <div class="label">اسم مركز العمليات</div>
+      <input id="receiverName" class="input" placeholder="اسم مركز العمليات" />
+      <div class="label">كود مركز العمليات</div>
+      <input id="receiverCode" class="input" placeholder="كود مركز العمليات" />
     </div>
-
     <div>
-      <div class="label">النائب — <span class="muted">الاسم</span></div>
-      <input id="deputyName" class="input" placeholder="الاسم" />
-      <div class="label">— <span class="muted">الكود</span></div>
-      <input id="deputyCode" class="input" placeholder="الكود" />
-      <div id="deputyErr" class="err">يجب عليك كتابة الاسم مع كود</div>
+      <div class="label">النائب مركز العمليات</div>
+      <input id="deputyName" class="input" placeholder="اسم النائب" />
+      <div class="label">كود النائب</div>
+      <input id="deputyCode" class="input" placeholder="كود النائب" />
     </div>
   </div>
-</section>
 
-<!-- معلومات إضافية: القيادات، الضباط، مسؤول الفترة -->
-<section class="card">
-  <h3>القيادات</h3>
-  <div class="row two">
+  <div class="row two" style="margin-top:12px">
     <div>
-      <div class="label">الاسم</div>
-      <input id="leaderName" class="input" placeholder="اسم القيادى" />
+      <div class="label">القيادات (كود)</div>
+      <input id="leaderCode" class="input" placeholder="كود القيادة" />
+      <button id="addLeader" class="btn small">أضف قيادة</button>
+      <div id="leadersList" class="hint small"></div>
     </div>
     <div>
-      <div class="label">الكود</div>
-      <input id="leaderCode" class="input" placeholder="كود القيادى" />
-    </div>
-  </div>
-  <button id="addLeader" class="btn small">أضف قيادة</button>
-  <div id="leadersList" class="hint small"></div>
-</section>
-
-<section class="card">
-  <h3>الضباط</h3>
-  <div class="row two">
-    <div>
-      <div class="label">الاسم</div>
-      <input id="officerName" class="input" placeholder="اسم الضابط" />
-    </div>
-    <div>
-      <div class="label">الكود</div>
+      <div class="label">الضباط (كود)</div>
       <input id="officerCode" class="input" placeholder="كود الضابط" />
+      <button id="addOfficer" class="btn small">أضف ضابط</button>
+      <div id="officersList" class="hint small"></div>
     </div>
   </div>
-  <button id="addOfficer" class="btn small">أضف ضابط</button>
-  <div id="officersList" class="hint small"></div>
-</section>
 
-<section class="card">
-  <h3>مسؤل الفترة</h3>
-  <div class="row two">
+  <div class="row two" style="margin-top:12px">
     <div>
-      <div class="label">الاسم</div>
-      <input id="shiftName" class="input" placeholder="اسم مسؤول الفترة" />
+      <div class="label">مسؤل الفترة (اسم + كود)</div>
+      <input id="shiftName" class="input" placeholder="الاسم" />
+      <input id="shiftCode" class="input" placeholder="الكود" style="margin-top:6px" />
     </div>
     <div>
-      <div class="label">الكود</div>
-      <input id="shiftCode" class="input" placeholder="كود مسؤول الفترة" />
-    </div>
-  </div>
-</section>
-
-<section class="card">
-  <h3>ضباط صف (كود فقط)</h3>
-  <div class="row two">
-    <div>
+      <div class="label">ضباط صف (كود)</div>
       <input id="corporalCode" class="input" placeholder="كود ضابط صف" />
-    </div>
-    <div>
       <button id="addCorporal" class="btn small">أضف</button>
+      <div id="corporalsList" class="hint small"></div>
     </div>
   </div>
-  <div id="corporalsList" class="hint small"></div>
 </section>
 
+
+    <!-- منطقة السحب/اللصق -->
+    <section class="card">
+      
+<!-- توزيع الوحدات (منسق) -->
 <section class="card">
   <h3>توزيع الوحدات</h3>
-  <div class="label">وحدات مشتركة</div>
-  <div class="row two">
-    <div><input id="sharedUnitCode" class="input" placeholder="كود الوحدة المشتركة" /></div>
-    <div><button id="addShared" class="btn small">أضف</button></div>
+  <div id="unitTable" class="unit-table">
+    <div class="unit-row header">
+      <div>الكود</div><div>الموقع</div><div>الحالة</div><div>سبيد يونت</div><div>أزرار</div>
+    </div>
+    <div id="unitRows"></div>
   </div>
-  <div id="sharedList" class="hint small"></div>
 
-  <div class="label">وحدات دباب</div>
-  <div class="row two">
-    <div><input id="tankUnitCode" class="input" placeholder="كود وحدة دباب" /></div>
-    <div><button id="addTank" class="btn small">أضف</button></div>
-  </div>
-  <div id="tankList" class="hint small"></div>
-
-  <div class="label">وحدات سبيد يونت</div>
-  <div class="row two">
+  <div style="margin-top:10px" class="row two">
+    <div><input id="unitCode" class="input" placeholder="كود" /></div>
+    <div><input id="unitLoc" class="input" placeholder="الموقع" /></div>
     <div>
-      <select id="speedUnitType" class="select">
-        <option value="">اختر النوع</option>
+      <select id="unitState" class="select">
+        <option value="">اختر الحالة</option>
+        <option value="مشغول">مشغول</option>
+        <option value="مشغول - اختبار">مشغول - اختبار</option>
+        <option value="مشغول - تدريب">مشغول - تدريب</option>
+        <option value="مشغول حالة موجه 10">مشغول حالة موجه 10</option>
+      </select>
+    </div>
+    <div>
+      <select id="unitSpeedType" class="select">
+        <option value="">نوع سبيد يونت</option>
         <option value="فايبكس">فايبكس</option>
         <option value="موتركس">موتركس</option>
       </select>
     </div>
-    <div><input id="speedUnitCode" class="input" placeholder="كود سبيد يونت" /></div>
+    <div>
+      <button id="addUnit" class="btn small">أضف</button>
+      <button id="addPartner" class="btn small">أضف شريك</button>
+    </div>
   </div>
-  <div class="row two" style="margin-top:8px">
-    <div><button id="addSpeed" class="btn small">أضف سبيد يونت</button></div>
-    <div></div>
+
+  <div style="margin-top:10px">
+    <div class="label">وحدات مشتركة</div><div id="sharedList" class="hint small"></div>
+    <div class="label">وحدات دباب</div><div id="tankList" class="hint small"></div>
+    <div class="label">وحدات سبيد يونت</div><div id="speedList" class="hint small"></div>
   </div>
-  <div id="speedList" class="hint small"></div>
 </section>
-<!-- منطقة السحب/اللصق -->
-    <section class="card">
-      <div id="dropArea" class="drop">
+<div id="dropArea" class="drop">
         اسحب وأفلت صورة هنا، أو الصقها بـ <b>Ctrl+V</b>
       </div>
       <div class="hint small">يفضل رفع/لصق صورة عالية الجودة. أحيانًا ستحتاج لتعديل النتائج يدويًا قبل الإرسال.</div>
