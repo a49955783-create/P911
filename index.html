@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تحديث مركز العمليات للشرطة</title>
+
+  <!-- خط عربي جميل (اختياري) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- أنماط -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Tesseract OCR -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
+</head>
+<body>
+
+  <!-- انترو إسعاف -->
+  <div id="intro">
+    <div class="beacons">
+      <span class="beacon blue"></span>
+      <span class="beacon red"></span>
+    </div>
+    <div class="intro-logo">
+      
+    </div>
+    <div class="intro-title"><b>EMS</b> مستشفى ريسبكت</div>
+  </div>
+
+  <!-- توست “تم النسخ” -->
+  <div id="copyToast">تم النسخ</div>
+
+  <!-- هيدر ثابت -->
+  <header class="topbar">
+    
+    <h1>تحديث مركز العمليات للشرطة</h1>
+    
+  </header>
+
+  <!-- أكشنات علوية ثابتة تحت الهيدر -->
+  <div class="sticky-actions">
+    <div class="actions">
+      <button id="clearBtn" class="btn danger">وضع تفريغ/ناتج</button>
+      <label class="btn violet" for="imgInput">رفع/لصق صورة</label>
+      <input id="imgInput" type="file" accept="image/*" hidden />
+    </div>
+
+    <!-- وضع الإدخال -->
+    <div class="mode">
+      <label><input type="radio" name="mergeMode" value="replace" checked /> استبدال</label>
+      <label><input type="radio" name="mergeMode" value="merge" /> دمج</label>
+    </div>
+  </div>
+
+  <main class="container">
+    <!-- صندوق النتيجة -->
+    <section class="card">
+      <div class="card-head">
+        <div class="title">النتيجة النهائية</div>
+        <button id="copyBtn" class="btn slim">نسخ النتيجة</button>
+      </div>
+      <textarea id="resultBox" class="result" rows="10" spellcheck="false"></textarea>
+      <div class="hint small">المستلم يُحتسب ضمن العدد ولا يُعرض ضمن قائمة الميدان.</div>
+    </section>
+
+    
+<!-- المستلم/النائب -->
+<section class="card">
+  <div class="row two">
+    <div>
+      <div class="label">المستلم — <span class="muted">الاسم</span></div>
+      <input id="receiverName" class="input" placeholder="الاسم" />
+      <div class="label">— <span class="muted">الكود</span></div>
+      <input id="receiverCode" class="input" placeholder="الكود" />
+      <div id="receiverErr" class="err">يجب عليك كتابة الاسم مع كود</div>
+    </div>
+
+    <div>
+      <div class="label">النائب — <span class="muted">الاسم</span></div>
+      <input id="deputyName" class="input" placeholder="الاسم" />
+      <div class="label">— <span class="muted">الكود</span></div>
+      <input id="deputyCode" class="input" placeholder="الكود" />
+      <div id="deputyErr" class="err">يجب عليك كتابة الاسم مع كود</div>
+    </div>
+  </div>
+</section>
+
+<!-- معلومات إضافية: القيادات، الضباط، مسؤول الفترة -->
+<section class="card">
+  <h3>القيادات</h3>
+  <div class="row two">
+    <div>
+      <div class="label">الاسم</div>
+      <input id="leaderName" class="input" placeholder="اسم القيادى" />
+    </div>
+    <div>
+      <div class="label">الكود</div>
+      <input id="leaderCode" class="input" placeholder="كود القيادى" />
+    </div>
+  </div>
+  <button id="addLeader" class="btn small">أضف قيادة</button>
+  <div id="leadersList" class="hint small"></div>
+</section>
+
+<section class="card">
+  <h3>الضباط</h3>
+  <div class="row two">
+    <div>
+      <div class="label">الاسم</div>
+      <input id="officerName" class="input" placeholder="اسم الضابط" />
+    </div>
+    <div>
+      <div class="label">الكود</div>
+      <input id="officerCode" class="input" placeholder="كود الضابط" />
+    </div>
+  </div>
+  <button id="addOfficer" class="btn small">أضف ضابط</button>
+  <div id="officersList" class="hint small"></div>
+</section>
+
+<section class="card">
+  <h3>مسؤل الفترة</h3>
+  <div class="row two">
+    <div>
+      <div class="label">الاسم</div>
+      <input id="shiftName" class="input" placeholder="اسم مسؤول الفترة" />
+    </div>
+    <div>
+      <div class="label">الكود</div>
+      <input id="shiftCode" class="input" placeholder="كود مسؤول الفترة" />
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h3>ضباط صف (كود فقط)</h3>
+  <div class="row two">
+    <div>
+      <input id="corporalCode" class="input" placeholder="كود ضابط صف" />
+    </div>
+    <div>
+      <button id="addCorporal" class="btn small">أضف</button>
+    </div>
+  </div>
+  <div id="corporalsList" class="hint small"></div>
+</section>
+
+<section class="card">
+  <h3>توزيع الوحدات</h3>
+  <div class="label">وحدات مشتركة</div>
+  <div class="row two">
+    <div><input id="sharedUnitCode" class="input" placeholder="كود الوحدة المشتركة" /></div>
+    <div><button id="addShared" class="btn small">أضف</button></div>
+  </div>
+  <div id="sharedList" class="hint small"></div>
+
+  <div class="label">وحدات دباب</div>
+  <div class="row two">
+    <div><input id="tankUnitCode" class="input" placeholder="كود وحدة دباب" /></div>
+    <div><button id="addTank" class="btn small">أضف</button></div>
+  </div>
+  <div id="tankList" class="hint small"></div>
+
+  <div class="label">وحدات سبيد يونت</div>
+  <div class="row two">
+    <div>
+      <select id="speedUnitType" class="select">
+        <option value="">اختر النوع</option>
+        <option value="فايبكس">فايبكس</option>
+        <option value="موتركس">موتركس</option>
+      </select>
+    </div>
+    <div><input id="speedUnitCode" class="input" placeholder="كود سبيد يونت" /></div>
+  </div>
+  <div class="row two" style="margin-top:8px">
+    <div><button id="addSpeed" class="btn small">أضف سبيد يونت</button></div>
+    <div></div>
+  </div>
+  <div id="speedList" class="hint small"></div>
+</section>
+<!-- منطقة السحب/اللصق -->
+    <section class="card">
+      <div id="dropArea" class="drop">
+        اسحب وأفلت صورة هنا، أو الصقها بـ <b>Ctrl+V</b>
+      </div>
+      <div class="hint small">يفضل رفع/لصق صورة عالية الجودة. أحيانًا ستحتاج لتعديل النتائج يدويًا قبل الإرسال.</div>
+    </section>
+
+    <!-- جدول/قائمة العناصر -->
+    <section class="card">
+      <div class="card-head">
+        <div class="title">القائمة (ضبط/الاسم//الكود//الحالة//الموقع):</div>
+        <button id="addRowBtn" class="btn violet">إضافة سطر جديد</button>
+      </div>
+
+      <div id="rows"></div>
+    </section>
+  </main>
+
+  <!-- الدروار للجوال (إضافة/تحرير سطر) -->
+  <div id="drawerBackdrop"></div>
+  <aside id="drawer">
+    <div class="drawer-head">
+      <div class="drawer-title">إضافة/تحرير سطر</div>
+      <button id="drawerClose" class="btn icon">&times;</button>
+    </div>
+
+    <div class="drawer-body">
+      <label class="drawer-label">الاسم</label>
+      <input id="dName" class="input" placeholder="اسم ثلاثي"/>
+
+      <label class="drawer-label">الكود</label>
+      <input id="dCode" class="input" placeholder="DA5 مثلاً"/>
+
+      <label class="drawer-label">الحالة</label>
+      <select id="dState" class="select">
+        <option>في الميدان</option>
+        <option>مشغول</option>
+        <option>مشغول - تدريب</option>
+        <option>مشغول - اختبار</option>
+        <option>خارج الخدمة</option>
+      </select>
+
+      <label class="drawer-label">الموقع</label>
+      <select id="dLoc" class="select">
+        <option>— لا شيء —</option>
+        <option>الغرب</option><option>الشرق</option><option>الشمال</option>
+        <option>الوسط</option><option>الجنوب</option><option>ساندي</option>
+        <option>بليتو</option>
+      </select>
+    </div>
+
+    <div class="drawer-foot">
+      <button id="drawerSave" class="btn violet block">تم</button>
+    </div>
+  </aside>
+
+  <!-- سكربت -->
+  <script src="app.js"></script>
+</body>
+</html>
