@@ -1,83 +1,70 @@
 body {
-  background-color: #0a0a0f;
-  color: #e0e0e0;
-  font-family: "Cairo", sans-serif;
+  font-family: "Tajawal", sans-serif;
+  background-color: #0d1117;
+  color: #e6edf3;
   margin: 0;
-  padding: 0;
+  padding: 20px;
   direction: rtl;
-  text-align: right;
 }
 
-.hidden { display: none; }
-
-.intro {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle, #111 0%, #000 100%);
+#intro {
   text-align: center;
+  margin-top: 25vh;
+  animation: fadeIn 2s ease;
 }
+#intro h1 { font-size: 2.5em; margin-bottom: 10px; color: #3fa9f5; }
+#intro h2 { color: #ccc; font-size: 1.3em; }
 
-.intro h1 {
-  font-size: 3em;
-  color: #00ff99;
-  margin: 0;
-}
-.intro p {
-  font-size: 1.2em;
-  color: #ccc;
-}
-.intro button {
-  margin-top: 20px;
-  padding: 10px 25px;
-  background-color: #00ff99;
-  color: #000;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-h2, h3 {
-  color: #00ff99;
+#main {
+  max-width: 700px;
+  margin: auto;
 }
 
 .section {
-  background: #141420;
-  padding: 15px;
-  margin: 15px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #00ff99;
+  margin: 15px 0;
 }
 
-input, select, textarea, button {
-  margin: 5px;
-  padding: 7px;
-  border-radius: 5px;
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
   border: none;
-  outline: none;
-  font-size: 1em;
+  border-radius: 8px;
+  margin-top: 5px;
+  background-color: #161b22;
+  color: #fff;
 }
 
 button {
-  background-color: #00ff99;
-  color: #000;
+  background-color: #238636;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: #fff;
   cursor: pointer;
+  margin-top: 5px;
 }
-
-.upload-box {
-  border: 2px dashed #00ff99;
-  padding: 20px;
-  text-align: center;
-  color: #aaa;
-  border-radius: 10px;
+button:hover {
+  background-color: #2ea043;
 }
 
 textarea {
-  width: 95%;
-  height: 250px;
-  background: #000;
-  color: #00ff99;
-  font-size: 1em;
+  min-height: 250px;
+  margin-top: 15px;
+}
+
+hr {
+  border: 1px solid #30363d;
+  margin: 20px 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px);}
+  to { opacity: 1; transform: translateY(0);}
 }
