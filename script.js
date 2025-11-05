@@ -1,124 +1,141 @@
-document.getElementById("enterBtn").onclick = () => {
-  document.getElementById("intro").classList.add("hidden");
-  document.getElementById("mainPage").classList.remove("hidden");
-};
+// إخفاء الانترو بعد 2.5 ثانية
+setTimeout(() => {
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("main").style.display = "block";
+}, 2500);
 
-const leaders = [];
-const officers = [];
-const sergeants = [];
-const units = [];
-
+// دوال الإضافة
 function addLeader() {
-  const code = document.getElementById("leaderCode").value;
-  if (!code) return;
-  leaders.push(code);
-  renderList("leadersList", leaders);
-  document.getElementById("leaderCode").value = "";
+  const div = document.createElement("div");
+  div.innerHTML = `<input type="text" placeholder="كود القيادة" />
+                   <button onclick="this.parentNode.remove()">🗑️</button>`;
+  document.getElementById("leaders").appendChild(div);
 }
 
 function addOfficer() {
-  const code = document.getElementById("officerCode").value;
-  if (!code) return;
-  officers.push(code);
-  renderList("officersList", officers);
-  document.getElementById("officerCode").value = "";
+  const div = document.createElement("div");
+  div.innerHTML = `<input type="text" placeholder="كود الضابط" />
+                   <button onclick="this.parentNode.remove()">🗑️</button>`;
+  document.getElementById("officers").appendChild(div);
 }
 
-function addSergeant() {
-  const code = document.getElementById("sergeantCode").value;
-  if (!code) return;
-  sergeants.push(code);
-  renderList("sergeantsList", sergeants);
-  document.getElementById("sergeantCode").value = "";
+function addNco() {
+  const div = document.createElement("div");
+  div.innerHTML = `<input type="text" placeholder="كود ضابط الصف" />
+                   <button onclick="this.parentNode.remove()">🗑️</button>`;
+  document.getElementById("ncos").appendChild(div);
 }
 
 function addUnit() {
-  const code = document.getElementById("unitCode").value;
-  const status = document.getElementById("unitStatus").value;
-  const loc = document.getElementById("unitLocation").value;
-  const type = document.getElementById("unitType").value;
-
-  if (!code) return;
-
-  units.push({ code, status, loc, type });
-  renderUnits();
-  document.getElementById("unitCode").value = "";
+  const div = document.createElement("div");
+  div.innerHTML = `
+    <input type="text" placeholder="الكود" />
+    <select>
+      <option value="في الخدمة">في الخدمة</option>
+      <option value="مشغول">مشغول</option>
+      <option value="مشغول - اختبار">مشغول - اختبار</option>
+      <option value="مشغول - تدريب">مشغول - تدريب</option>
+      <option value="مشغول حالة موجه 10">مشغول حالة موجه 10</option>
+    </select>
+    <select>
+      <option value="">— الموقع —</option>
+      <option>الشمال</option>
+      <option>وسط</option>
+      <option>الشرق</option>
+      <option>الجنوب</option>
+      <option>ساندي</option>
+      <option>بوليتو</option>
+    </select>
+    <button onclick="this.parentNode.remove()">🗑️</button>
+  `;
+  document.getElementById("units").appendChild(div);
 }
 
-function renderList(containerId, arr) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = arr.map((x, i) =>
-    `<div>${x} <button onclick="removeItem('${containerId}', ${i})">حذف</button></div>`
-  ).join("");
+function addSpeedUnit() {
+  const div = document.createElement("div");
+  div.innerHTML = `<input type="text" placeholder="الكود" />
+                   <select><option>فايبكس</option><option>موتركس</option></select>
+                   <button onclick="this.parentNode.remove()">🗑️</button>`;
+  document.getElementById("speedUnits").appendChild(div);
 }
 
-function removeItem(containerId, index) {
-  if (containerId === "leadersList") leaders.splice(index, 1);
-  if (containerId === "officersList") officers.splice(index, 1);
-  if (containerId === "sergeantsList") sergeants.splice(index, 1);
-  renderList(containerId, eval(containerId.replace("List", "s")));
+function addBikeUnit() {
+  const div = document.createElement("div");
+  div.innerHTML = `<input type="text" placeholder="الكود" />
+                   <button onclick="this.parentNode.remove()">🗑️</button>`;
+  document.getElementById("bikeUnits").appendChild(div);
 }
 
-function renderUnits() {
-  const container = document.getElementById("unitsList");
-  container.innerHTML = units.map((u, i) => `
-    <div>${u.code} | ${u.status} | ${u.loc} | ${u.type}
-    <button onclick="editUnit(${i})">تعديل</button>
-    <button onclick="deleteUnit(${i})">حذف</button></div>`).join("");
+function addSharedUnit() {
+  const div = document.createElement("div");
+  div.innerHTML = `<input type="text" placeholder="الكود الأول" /> +
+                   <input type="text" placeholder="الكود الثاني" /> |
+                   <input type="text" placeholder="الموقع" />
+                   <button onclick="this.parentNode.remove()">🗑️</button>`;
+  document.getElementById("sharedUnits").appendChild(div);
 }
 
-function editUnit(i) {
-  const u = units[i];
-  document.getElementById("unitCode").value = u.code;
-  document.getElementById("unitStatus").value = u.status;
-  document.getElementById("unitLocation").value = u.loc;
-  document.getElementById("unitType").value = u.type;
-  units.splice(i, 1);
-  renderUnits();
-}
+// إنشاء النتيجة النهائية
+function generateReport() {
+  const ops = document.getElementById("opsName").value;
+  const dep = document.getElementById("opsDeputy").value;
+  const leaderCodes = [...document.querySelectorAll("#leaders input")].map(i => i.value).filter(Boolean).join(" - ");
+  const officerCodes = [...document.querySelectorAll("#officers input")].map(i => i.value).filter(Boolean).join(" - ");
+  const ncos = [...document.querySelectorAll("#ncos input")].map(i => i.value).filter(Boolean).join(" - ");
+  const manager = document.getElementById("shiftManager").value;
 
-function deleteUnit(i) {
-  units.splice(i, 1);
-  renderUnits();
-}
+  const units = [...document.querySelectorAll("#units div")].map(d => {
+    const vals = [...d.querySelectorAll("input,select")].map(v => v.value).filter(Boolean);
+    return vals.join(" | ");
+  }).filter(Boolean);
 
-function generateResult() {
-  const op = document.getElementById("operationName").value || "";
-  const dep = document.getElementById("deputyName").value || "";
-  const manName = document.getElementById("managerName").value || "";
-  const manCode = document.getElementById("managerCode").value || "";
+  const speed = [...document.querySelectorAll("#speedUnits div")].map(d => [...d.querySelectorAll("input,select")].map(v => v.value).join(" | ")).filter(Boolean);
+  const bikes = [...document.querySelectorAll("#bikeUnits input")].map(i => i.value).filter(Boolean);
+  const shared = [...document.querySelectorAll("#sharedUnits div")].map(d => [...d.querySelectorAll("input")].map(v => v.value).join(" + ")).filter(Boolean);
 
-  let result = `استلام العمليات 📌
-اسم العمليات : ${op}
+  const now = new Date();
+  const time = now.toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" });
+
+  const resultText = `
+استلام العمليات 📌
+اسم العمليات : ${ops}
 النائب مركز العمليات : ${dep}
 
 القيادات
-${leaders.join(" - ") || "-"}
+${leaderCodes || "-"}
 
 الضباط
-${officers.join(" - ") || "-"}
+${officerCodes || "-"}
 
-مسؤول فترة
-${manName} ${manCode}
+مسؤل فترة
+${manager || "-"}
 
 ضباط الصف
-${sergeants.join(" - ") || "-"}
+${ncos || "-"}
 
-توزيع الوحدات  
-${units.filter(u => u.type === "لا شي").map(u => `${u.code} | ${u.status} | ${u.loc}`).join("\n") || "-"}
+توزيع الوحدات
+${units.join("\n") || "-"}
 
 وحدات سبيد يونت
-${units.filter(u => u.type === "سبيد يونت").map(u => `${u.code} | ${u.status} | ${u.loc}`).join("\n") || "-"}
+${speed.join("\n") || "-"}
 
 وحدات دباب
-${units.filter(u => u.type === "دباب").map(u => `${u.code} | ${u.status} | ${u.loc}`).join("\n") || "-"}
+${bikes.join("\n") || "-"}
 
 وحدات مشتركة
-${units.filter(u => u.type === "مشتركة").map(u => `${u.code} | ${u.status} | ${u.loc}`).join("\n") || "-"}
+${shared.join("\n") || "-"}
 
-وقت الاستلام: —
-وقت التسليم: —
-تم التسليم إلى :`;
+وقت الاستلام: ${time}
+وقت التسليم: 
+تم التسليم إلى :
+  `.trim();
 
-  document.getElementById("resultBox").value = result;
+  document.getElementById("result").value = resultText;
+}
+
+function copyResult() {
+  const res = document.getElementById("result");
+  res.select();
+  document.execCommand("copy");
+  alert("✅ تم نسخ النتيجة بنجاح!");
 }
