@@ -1,101 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تحديث مركز العمليات للشرطة</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <!-- شاشة الانترو -->
-  <div id="intro" class="intro">
-    <h1>شرطة ريسبكت</h1>
-    <p>تحديث مركز العمليات للشرطة</p>
-    <button id="enterBtn">دخول</button>
-  </div>
-
-  <!-- الصفحة الرئيسية -->
-  <div id="mainPage" class="hidden">
-    <h2>📌 استلام العمليات</h2>
-
-    <div class="section">
-      <label>اسم العمليات:</label>
-      <input type="text" id="operationName">
-      <label>النائب مركز العمليات:</label>
-      <input type="text" id="deputyName">
-    </div>
-
-    <div class="section">
-      <h3>القيادات</h3>
-      <div id="leadersList"></div>
-      <input type="text" id="leaderCode" placeholder="الكود">
-      <button onclick="addLeader()">أضف قيادة</button>
-    </div>
-
-    <div class="section">
-      <h3>الضباط</h3>
-      <div id="officersList"></div>
-      <input type="text" id="officerCode" placeholder="الكود">
-      <button onclick="addOfficer()">أضف ضابط</button>
-    </div>
-
-    <div class="section">
-      <h3>مسؤول الفترة</h3>
-      <input type="text" id="managerName" placeholder="الاسم">
-      <input type="text" id="managerCode" placeholder="الكود">
-    </div>
-
-    <div class="section">
-      <h3>ضباط الصف</h3>
-      <div id="sergeantsList"></div>
-      <input type="text" id="sergeantCode" placeholder="الكود">
-      <button onclick="addSergeant()">أضف</button>
-    </div>
-
-    <div class="section">
-      <h3>توزيع الوحدات</h3>
-      <div id="unitsList"></div>
-      <input type="text" id="unitCode" placeholder="الكود">
-      <select id="unitStatus">
-        <option>في الخدمة</option>
-        <option>مشغول</option>
-        <option>مشغول - اختبار</option>
-        <option>مشغول - تدريب</option>
-        <option>مشغول حالة موجه 10</option>
-      </select>
-      <select id="unitLocation">
-        <option>لا شي</option>
-        <option>الشمال</option>
-        <option>الوسط</option>
-        <option>الشرق</option>
-        <option>الجنوب</option>
-        <option>ساندي</option>
-        <option>بوليتو</option>
-      </select>
-      <select id="unitType">
-        <option>لا شي</option>
-        <option>سبيد يونت</option>
-        <option>دباب</option>
-        <option>مشتركة</option>
-      </select>
-      <button onclick="addUnit()">أضف وحدة</button>
-    </div>
-
-    <div class="section">
-      <h3>📎 رفع صورة</h3>
-      <div class="upload-box" id="uploadBox">
-        اسحب وأفلت صورة هنا أو الصقها بـ Ctrl+V
-      </div>
-      <input type="file" id="fileInput" hidden />
-    </div>
-
-    <div class="section">
-      <button onclick="generateResult()">عرض النتيجة</button>
-    </div>
-
-    <textarea id="resultBox" readonly></textarea>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
