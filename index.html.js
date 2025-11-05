@@ -1,124 +1,89 @@
-document.getElementById("enterBtn").onclick = () => {
-  document.getElementById("intro").classList.add("hidden");
-  document.getElementById("mainPage").classList.remove("hidden");
-};
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تحديث مركز العمليات للشرطة</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
-const leaders = [];
-const officers = [];
-const sergeants = [];
-const units = [];
+  <!-- شاشة البداية (الانترو) -->
+  <div id="intro">
+    <h1>🚔 شرطة ريسبكت 🚔</h1>
+    <h2>تحديث مركز العمليات للشرطة</h2>
+  </div>
 
-function addLeader() {
-  const code = document.getElementById("leaderCode").value;
-  if (!code) return;
-  leaders.push(code);
-  renderList("leadersList", leaders);
-  document.getElementById("leaderCode").value = "";
-}
+  <!-- المحتوى الرئيسي -->
+  <div id="main" style="display:none">
+    <h2 class="title">📋 نموذج استلام العمليات</h2>
 
-function addOfficer() {
-  const code = document.getElementById("officerCode").value;
-  if (!code) return;
-  officers.push(code);
-  renderList("officersList", officers);
-  document.getElementById("officerCode").value = "";
-}
+    <div class="section">
+      <label>اسم العمليات:</label>
+      <input id="opsName" type="text" />
+    </div>
 
-function addSergeant() {
-  const code = document.getElementById("sergeantCode").value;
-  if (!code) return;
-  sergeants.push(code);
-  renderList("sergeantsList", sergeants);
-  document.getElementById("sergeantCode").value = "";
-}
+    <div class="section">
+      <label>النائب مركز العمليات:</label>
+      <input id="opsDeputy" type="text" />
+    </div>
 
-function addUnit() {
-  const code = document.getElementById("unitCode").value;
-  const status = document.getElementById("unitStatus").value;
-  const loc = document.getElementById("unitLocation").value;
-  const type = document.getElementById("unitType").value;
+    <hr>
 
-  if (!code) return;
+    <!-- الأقسام -->
+    <div class="section">
+      <label>القيادات:</label>
+      <div id="leaders"></div>
+      <button onclick="addLeader()">➕ أضف قيادة</button>
+    </div>
 
-  units.push({ code, status, loc, type });
-  renderUnits();
-  document.getElementById("unitCode").value = "";
-}
+    <div class="section">
+      <label>الضباط:</label>
+      <div id="officers"></div>
+      <button onclick="addOfficer()">➕ أضف ضابط</button>
+    </div>
 
-function renderList(containerId, arr) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = arr.map((x, i) =>
-    `<div>${x} <button onclick="removeItem('${containerId}', ${i})">حذف</button></div>`
-  ).join("");
-}
+    <div class="section">
+      <label>مسؤول الفترة (اسم + كود):</label>
+      <input id="shiftManager" type="text" placeholder="مثال: عبدالله صالح 145" />
+    </div>
 
-function removeItem(containerId, index) {
-  if (containerId === "leadersList") leaders.splice(index, 1);
-  if (containerId === "officersList") officers.splice(index, 1);
-  if (containerId === "sergeantsList") sergeants.splice(index, 1);
-  renderList(containerId, eval(containerId.replace("List", "s")));
-}
+    <div class="section">
+      <label>ضباط الصف (كود):</label>
+      <div id="ncos"></div>
+      <button onclick="addNco()">➕ أضف ضابط صف</button>
+    </div>
 
-function renderUnits() {
-  const container = document.getElementById("unitsList");
-  container.innerHTML = units.map((u, i) => `
-    <div>${u.code} | ${u.status} | ${u.loc} | ${u.type}
-    <button onclick="editUnit(${i})">تعديل</button>
-    <button onclick="deleteUnit(${i})">حذف</button></div>`).join("");
-}
+    <hr>
 
-function editUnit(i) {
-  const u = units[i];
-  document.getElementById("unitCode").value = u.code;
-  document.getElementById("unitStatus").value = u.status;
-  document.getElementById("unitLocation").value = u.loc;
-  document.getElementById("unitType").value = u.type;
-  units.splice(i, 1);
-  renderUnits();
-}
+    <!-- توزيع الوحدات -->
+    <h3>🚓 توزيع الوحدات</h3>
+    <div id="units"></div>
+    <button onclick="addUnit()">➕ أضف وحدة</button>
 
-function deleteUnit(i) {
-  units.splice(i, 1);
-  renderUnits();
-}
+    <h3>🚀 وحدات سبيد يونت</h3>
+    <div id="speedUnits"></div>
+    <button onclick="addSpeedUnit()">➕ أضف وحدة سبيد يونت</button>
 
-function generateResult() {
-  const op = document.getElementById("operationName").value || "";
-  const dep = document.getElementById("deputyName").value || "";
-  const manName = document.getElementById("managerName").value || "";
-  const manCode = document.getElementById("managerCode").value || "";
+    <h3>🏍️ وحدات دباب</h3>
+    <div id="bikeUnits"></div>
+    <button onclick="addBikeUnit()">➕ أضف وحدة دباب</button>
 
-  let result = `استلام العمليات 📌
-اسم العمليات : ${op}
-النائب مركز العمليات : ${dep}
+    <h3>🤝 وحدات مشتركة</h3>
+    <div id="sharedUnits"></div>
+    <button onclick="addSharedUnit()">➕ أضف وحدة مشتركة</button>
 
-القيادات
-${leaders.join(" - ") || "-"}
+    <hr>
 
-الضباط
-${officers.join(" - ") || "-"}
+    <div class="buttons">
+      <button onclick="generateReport()">📄 استخراج النتيجة</button>
+      <button onclick="copyResult()">📋 نسخ النتيجة</button>
+      <input type="file" id="uploadImage" accept="image/*" />
+    </div>
 
-مسؤول فترة
-${manName} ${manCode}
+    <textarea id="result" placeholder="النتيجة النهائية ستظهر هنا ويمكنك التعديل عليها"></textarea>
+  </div>
 
-ضباط الصف
-${sergeants.join(" - ") || "-"}
-
-توزيع الوحدات  
-${units.filter(u => u.type === "لا شي").map(u => `${u.code} | ${u.status} | ${u.loc}`).join("\n") || "-"}
-
-وحدات سبيد يونت
-${units.filter(u => u.type === "سبيد يونت").map(u => `${u.code} | ${u.status} | ${u.loc}`).join("\n") || "-"}
-
-وحدات دباب
-${units.filter(u => u.type === "دباب").map(u => `${u.code} | ${u.status} | ${u.loc}`).join("\n") || "-"}
-
-وحدات مشتركة
-${units.filter(u => u.type === "مشتركة").map(u => `${u.code} | ${u.status} | ${u.loc}`).join("\n") || "-"}
-
-وقت الاستلام: —
-وقت التسليم: —
-تم التسليم إلى :`;
-
-  document.getElementById("resultBox").value = result;
-}
+  <script src="script.js"></script>
+</body>
+</html>
