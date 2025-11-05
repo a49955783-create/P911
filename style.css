@@ -1,30 +1,83 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
-:root{
-  --blue:#0b3b7a;
-  --accent:#0078d7;
-  --muted:#6b7280;
+body {
+  background-color: #0a0a0f;
+  color: #e0e0e0;
+  font-family: "Cairo", sans-serif;
+  margin: 0;
+  padding: 0;
+  direction: rtl;
+  text-align: right;
 }
-*{box-sizing:border-box;font-family:'Tajawal',sans-serif}
-body{margin:0;background:#f3f6fb;color:#071028;direction:rtl}
-.intro{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#e6eefc,#f7fbff)}
-.intro-box{background:var(--blue);padding:30px;border-radius:10px;box-shadow:0 8px 30px rgba(11,59,122,.12);color:#fff}
-.container{max-width:980px;margin:20px auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 6px 22px rgba(14,30,50,.06)}
-h1{text-align:center;color:var(--blue);margin:0 0 20px}
-.section-group{margin-bottom:18px}
-label{display:block;margin:8px 0;font-weight:700;color:var(--blue)}
-input,select,button{padding:8px 10px;border-radius:8px;border:1px solid #d1d9ea;font-size:14px}
-.inline-row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
-.pill-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.pill-list div{background:#f1f5f9;padding:6px 8px;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;gap:8px}
-.pill-list div button{margin-left:8px;background:#ef4444;padding:4px 6px;border-radius:6px;color:#fff;border:none;cursor:pointer}
-button{background:var(--accent);color:#fff;border:none;cursor:pointer}
-button:hover{opacity:.95}
-.unit-inputs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
-table{width:100%;border-collapse:collapse;margin-top:12px}
-table th,table td{border:1px solid #eef2ff;padding:8px;text-align:center}
-.generate{display:block;width:100%;background:#0ea5a9;color:#fff;padding:10px;border-radius:8px;margin-top:14px;border:none}
-#resultBox{background:#f8fafc;border:1px solid #e6eef8;padding:14px;border-radius:8px;margin-top:12px;white-space:pre-wrap;min-height:120px}
-.actions-row{display:flex;justify-content:flex-end;margin-top:8px}
-#copyBtn{background:#0b3b7a;padding:8px 12px;border-radius:8px}
-small{color:var(--muted)}
+
+.hidden { display: none; }
+
+.intro {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, #111 0%, #000 100%);
+  text-align: center;
+}
+
+.intro h1 {
+  font-size: 3em;
+  color: #00ff99;
+  margin: 0;
+}
+.intro p {
+  font-size: 1.2em;
+  color: #ccc;
+}
+.intro button {
+  margin-top: 20px;
+  padding: 10px 25px;
+  background-color: #00ff99;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+h2, h3 {
+  color: #00ff99;
+}
+
+.section {
+  background: #141420;
+  padding: 15px;
+  margin: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00ff99;
+}
+
+input, select, textarea, button {
+  margin: 5px;
+  padding: 7px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  font-size: 1em;
+}
+
+button {
+  background-color: #00ff99;
+  color: #000;
+  cursor: pointer;
+}
+
+.upload-box {
+  border: 2px dashed #00ff99;
+  padding: 20px;
+  text-align: center;
+  color: #aaa;
+  border-radius: 10px;
+}
+
+textarea {
+  width: 95%;
+  height: 250px;
+  background: #000;
+  color: #00ff99;
+  font-size: 1em;
+}

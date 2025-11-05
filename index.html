@@ -5,134 +5,95 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>تحديث مركز العمليات للشرطة</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Intro screen -->
+  <!-- شاشة الانترو -->
   <div id="intro" class="intro">
-    <div class="intro-box">
-      <h1>تحديث مركز العمليات للشرطة</h1>
-    </div>
+    <h1>شرطة ريسبكت</h1>
+    <p>تحديث مركز العمليات للشرطة</p>
+    <button id="enterBtn">دخول</button>
   </div>
 
-  <div class="container" id="main" style="display:none;">
-    <h1>تحديث مركز العمليات للشرطة</h1>
+  <!-- الصفحة الرئيسية -->
+  <div id="mainPage" class="hidden">
+    <h2>📌 استلام العمليات</h2>
 
-    <section class="main-info">
+    <div class="section">
       <label>اسم العمليات:</label>
-      <input type="text" id="operationsName" placeholder="اسم العمليات">
-
-      <label>كود مركز العمليات:</label>
-      <input type="text" id="operationsCode" placeholder="كود المركز">
-
-      <label>نائب مركز العمليات:</label>
-      <input type="text" id="deputy" placeholder="اسم النائب">
-
-      <label>كود النائب:</label>
-      <input type="text" id="deputyCode" placeholder="كود النائب">
-
-      <div class="section-group">
-        <h3>القيادات</h3>
-        <div id="leaders" class="pill-list"></div>
-        <div class="inline-row">
-          <input type="text" id="leaderCode" placeholder="كود القيادة">
-          <button id="addLeaderBtn">أضف قيادة</button>
-        </div>
-      </div>
-
-      <div class="section-group">
-        <h3>الضباط</h3>
-        <div id="officers" class="pill-list"></div>
-        <div class="inline-row">
-          <input type="text" id="officerCode" placeholder="كود الضابط">
-          <button id="addOfficerBtn">أضف ضابط</button>
-        </div>
-      </div>
-
-      <div class="section-group">
-        <h3>مسؤول الفترة</h3>
-        <div class="inline-row">
-          <input type="text" id="periodName" placeholder="الاسم">
-          <input type="text" id="periodCode" placeholder="الكود">
-        </div>
-      </div>
-
-      <div class="section-group">
-        <h3>ضباط الصف</h3>
-        <div id="ncos" class="pill-list"></div>
-        <div class="inline-row">
-          <input type="text" id="ncoCode" placeholder="كود">
-          <button id="addNcoBtn">أضف</button>
-        </div>
-      </div>
-
-      <div class="section-group">
-        <h3>توزيع الوحدات</h3>
-        <table id="unitsTable">
-          <thead>
-            <tr>
-              <th>الحالة</th>
-              <th>الكود</th>
-              <th>الموقع</th>
-              <th>نوع المركبة</th>
-              <th>تحكم</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-
-        <div class="unit-inputs">
-          <select id="unitStatus">
-            <option value="في الخدمة">في الخدمة</option>
-            <option value="مشغول">مشغول</option>
-            <option value="مشغول - اختبار">مشغول - اختبار</option>
-            <option value="مشغول - تدريب">مشغول - تدريب</option>
-            <option value="مشغول حالة موجه 10">مشغول حالة موجه 10</option>
-          </select>
-
-          <input type="text" id="unitCode" placeholder="الكود">
-
-          <select id="unitLocation">
-            <option value="الشمال">الشمال</option>
-            <option value="الوسط">الوسط</option>
-            <option value="الشرق">الشرق</option>
-            <option value="الجنوب">الجنوب</option>
-            <option value="ساندي">ساندي</option>
-            <option value="بوليتو">بوليتو</option>
-            <option value="لا شيء">لا شيء</option>
-          </select>
-
-          <select id="unitType">
-            <option value="مشتركة">مشتركة</option>
-            <option value="دباب">دباب</option>
-            <option value="سبيد يونت">سبيد يونت</option>
-          </select>
-
-          <select id="speedChoice" style="display:none;">
-            <option value="فايبكس">فايبكس</option>
-            <option value="موتركس">موتركس</option>
-          </select>
-
-          <button id="addUnitBtn">أضف وحدة</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="times">
-      <div class="inline-row">
-        <button id="startTimeBtn">تسجيل وقت الاستلام</button>
-        <button id="endTimeBtn">تسجيل وقت التسليم</button>
-      </div>
-      <p id="startTimeText"></p>
-      <p id="endTimeText"></p>
-    </section>
-
-    <button class="generate" id="generateBtn">عرض النتيجة النهائية</button>
-
-    <pre id="resultBox"></pre>
-    <div class="actions-row">
-      <button id="copyBtn">نسخ</button>
+      <input type="text" id="operationName">
+      <label>النائب مركز العمليات:</label>
+      <input type="text" id="deputyName">
     </div>
+
+    <div class="section">
+      <h3>القيادات</h3>
+      <div id="leadersList"></div>
+      <input type="text" id="leaderCode" placeholder="الكود">
+      <button onclick="addLeader()">أضف قيادة</button>
+    </div>
+
+    <div class="section">
+      <h3>الضباط</h3>
+      <div id="officersList"></div>
+      <input type="text" id="officerCode" placeholder="الكود">
+      <button onclick="addOfficer()">أضف ضابط</button>
+    </div>
+
+    <div class="section">
+      <h3>مسؤول الفترة</h3>
+      <input type="text" id="managerName" placeholder="الاسم">
+      <input type="text" id="managerCode" placeholder="الكود">
+    </div>
+
+    <div class="section">
+      <h3>ضباط الصف</h3>
+      <div id="sergeantsList"></div>
+      <input type="text" id="sergeantCode" placeholder="الكود">
+      <button onclick="addSergeant()">أضف</button>
+    </div>
+
+    <div class="section">
+      <h3>توزيع الوحدات</h3>
+      <div id="unitsList"></div>
+      <input type="text" id="unitCode" placeholder="الكود">
+      <select id="unitStatus">
+        <option>في الخدمة</option>
+        <option>مشغول</option>
+        <option>مشغول - اختبار</option>
+        <option>مشغول - تدريب</option>
+        <option>مشغول حالة موجه 10</option>
+      </select>
+      <select id="unitLocation">
+        <option>لا شي</option>
+        <option>الشمال</option>
+        <option>الوسط</option>
+        <option>الشرق</option>
+        <option>الجنوب</option>
+        <option>ساندي</option>
+        <option>بوليتو</option>
+      </select>
+      <select id="unitType">
+        <option>لا شي</option>
+        <option>سبيد يونت</option>
+        <option>دباب</option>
+        <option>مشتركة</option>
+      </select>
+      <button onclick="addUnit()">أضف وحدة</button>
+    </div>
+
+    <div class="section">
+      <h3>📎 رفع صورة</h3>
+      <div class="upload-box" id="uploadBox">
+        اسحب وأفلت صورة هنا أو الصقها بـ Ctrl+V
+      </div>
+      <input type="file" id="fileInput" hidden />
+    </div>
+
+    <div class="section">
+      <button onclick="generateResult()">عرض النتيجة</button>
+    </div>
+
+    <textarea id="resultBox" readonly></textarea>
   </div>
 
   <script src="script.js"></script>
